@@ -8,19 +8,23 @@ import Collection from "./pages/Collection";
 import Orders from "./pages/Orders";
 import PlaceOrder from "./pages/PlaceOrder";
 import Product from "./pages/Product";
+import NavBar from "./components/NavBar.jsx";
 const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<LogIn />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact/>} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/collection" element={<Collection/>} />
-      <Route path="/orders" element={<Orders />} />
-      <Route path="/place-order" element={<PlaceOrder />} />
-      <Route path="/product/:id" element={<Product />} />
-    </Routes>
+    <div className="px-2 sm:px-4 md:px-6 lg:px-8">
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/collection" element={<Collection />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/place-order" element={<PlaceOrder />} />
+        <Route path="/product/:id" element={<Product />} />
+      </Routes>
+    </div>
   );
 };
 
