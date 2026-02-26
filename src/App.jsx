@@ -24,7 +24,7 @@ const App = () => {
         <Route path="/collection" element={<Collection />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/place-order" element={<PlaceOrder />} />
-        <Route path="/product/:id" element={<Product />} />
+        <Route path="/product/:productId" element={<Product />} />
       </Routes>
     </div>
   );
