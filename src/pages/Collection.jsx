@@ -68,7 +68,8 @@ const Collection = () => {
   }, [category, subCategory, search, showSearch, products]);
 
   return (
-    <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 pt-10 px-4 sm:px-10 border-t">
+    
+    <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 pt-10 px-4 sm:px-10 border-t ">
       {/* Filter Options */}
       <div className="min-w-60">
         <p
