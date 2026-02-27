@@ -7,7 +7,7 @@ import ProductItem from "../components/ProductItem";
 const Collection = () => {
   const { products, search, showSearch } = useContext(ShopContext);
   const [showFilter, setShowFilter] = useState(false);
-  const [fliterProducts, setFilterProducts] = useState([]);
+  const [filterProducts, setFilterProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   // eslint-disable-next-line no-unused-vars
@@ -50,17 +50,15 @@ const Collection = () => {
   };
 
   const sortProducts = (e) => {
-    let filteredProductsCopy = fliterProducts.slice();
 
     if (e.target.value === "low-high") {
-      setFilterProducts(filteredProductsCopy.sort((a, b) => a.price - b.price));
-      setSortType("low-high");
+      const sortedLH=[...filterProducts].sort((a,b)=>a.price-b.price)
+      setFilterProducts(sortedLH);
     } else if (e.target.value === "high-low") {
-      setFilterProducts(filteredProductsCopy.sort((a, b) => b.price - a.price));
-      setSortType("high-low");
+      const sortedHL=[...filterProducts].sort((a,b)=>b.price-a.price)
+      setFilterProducts(sortedHL);
     } else {
       applyFilter();
-      setSortType("relavent");
     }
   };
 
@@ -70,12 +68,12 @@ const Collection = () => {
   }, [category, subCategory, search, showSearch, products]);
 
   return (
-    <div className="flex flex-col sm:flex-row gap-1 sm-gap-10 pt-10 border-t">
+    <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 pt-10 px-4 sm:px-10 border-t">
       {/* Filter Options */}
       <div className="min-w-60">
         <p
           onClick={() => setShowFilter(!showFilter)}
-          className="my-2 text-xl flex items-center cursor-pointer gap-2"
+          className="my-2 text-xl font-semibold flex items-center cursor-pointer gap-2"
         >
           FILTERS
           <img
@@ -86,7 +84,7 @@ const Collection = () => {
         </p>
         {/* category filter */}
         <div
-          className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? "block" : "hidden"} sm:block`}
+          className={`bg-white border border-gray-200 rounded-lg shadow-sm p-5 mt-6 ${showFilter ? "block" : "hidden"} sm:block`}
         >
           <p className="mb-3 text-sm font-medium">CATEGORIES</p>
           <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
@@ -121,7 +119,7 @@ const Collection = () => {
         </div>
         {/* subCategory filter */}
         <div
-          className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? "block" : "hidden"} sm:block`}
+          className={`bg-white border border-gray-200 rounded-lg shadow-sm p-5 mt-6 ${showFilter ? "block" : "hidden"} sm:block`}
         >
           <p className="mb-3 text-sm font-medium">TYPE</p>
           <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
@@ -155,35 +153,35 @@ const Collection = () => {
           </div>
         </div>
       </div>
-      {/* right side */}
-      <div className="flex-1">
-        <div className="flex justify-between text-base sm:text-2xl mb-4">
-          <Title title1={"ALL"} title2={"COLLECTIONS"} />
-          {/* sorting options */}
-          <select className="border-2 border-gray-300 text-sm px-2">
-            <option onChange={sortProducts} value="relavent">
-              Sort by: Relavent
-            </option>
-            <option onChange={sortProducts} value="low-high">
-              Sort by: Low to High
-            </option>
-            <option onChange={sortProducts} value="high-low">
-              Sort by: High to Low
-            </option>
-          </select>
+
+      <div>
+        {/* right side */}
+        <div className="flex-1">
+          <div className="flex justify-between text-base sm:text-2xl mb-4">
+            <Title text1={"All"} text2={"Collections"} />
+            {/* sorting options */}
+            <select
+              className="border border-gray-300 rounded-md text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+              onChange={sortProducts}
+            >
+              <option value="relavent">Sort by: Relavent</option>
+              <option value="low-high">Sort by: Low to High</option>
+              <option value="high-low">Sort by: High to Low</option>
+            </select>
+          </div>
         </div>
-      </div>
-      {/* map products */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
-        {fliterProducts.map((item, index) => {
-          <ProductItem
-            key={index}
-            id={item._id}
-            name={item.name}
-            price={item.price}
-            image={item.image}
-          />;
-        })}
+        {/* map products */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filterProducts.map((item, index) => (
+            <ProductItem
+              key={index}
+              id={item._id}
+              name={item.name}
+              price={item.price}
+              image={item.image}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
