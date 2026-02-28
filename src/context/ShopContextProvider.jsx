@@ -11,10 +11,10 @@ const ShopContextProvider = ({ children }) => {
   const [cartItems, setcartItems] = useState({});
 
   const addToCart = async (itemId, size) => {
-if(!size){
-  toast.error("Please select size")
-  return
-}
+    if (!size) {
+      toast.error("Please select size");
+      return;
+    }
 
     let cartData = structuredClone(cartItems);
     if (cartData[itemId]) {
@@ -23,34 +23,54 @@ if(!size){
       } else {
         cartData[itemId][size] = 1;
       }
-    }else{
-      cartData[itemId]={}
-      cartData[itemId][size]=1
+    } else {
+      cartData[itemId] = {};
+      cartData[itemId][size] = 1;
     }
-    setcartItems(cartData)
+    setcartItems(cartData);
   };
 
-const getCartCount=()=>{
-  let totalCount=0
-  for(const items in cartItems){
-    for(const item in cartItems[items]){
-      try {
-        if(cartItems[items][item]>0){
-          totalCount+=cartItems[items][item]
+  const getCartCount = () => {
+    let totalCount = 0;
+    for (const items in cartItems) {
+      for (const item in cartItems[items]) {
+        try {
+          if (cartItems[items][item] > 0) {
+            totalCount += cartItems[items][item];
+          }
+        } catch (error) {
+          console.log("error in size", error);
         }
-      } catch (error) {
-        console.log("error in size",error)
       }
     }
-  }
-  return totalCount
-}
+    return totalCount;
+  };
 
+  const updateQuantity = (itemId, size, quantity) => {
+    let cartData = structuredClone(cartItems);
+    cartData[itemId][size] = quantity;
+    setcartItems(cartData);
+  };
 
-
-useEffect(()=>{
-console.log(cartItems)
-},[cartItems])
+  const getCartAmount = () => {
+    let totalAmount = 0;
+    for (const items in cartItems) {
+      // console.log(products);
+      // console.log(items);
+      let itemInfo = products.find((product) => product._id === items);
+     
+      for (const item in cartItems[items]) {
+        try {
+          if (cartItems[items][item] > 0) {
+            totalAmount += itemInfo.price * cartItems[items][item];
+          }
+        } catch (error) {
+          console.log("error in get cart amount", error);
+        }
+      }
+    }
+    return totalAmount;
+  };
 
   const data = {
     products,
@@ -60,7 +80,12 @@ console.log(cartItems)
     setSearch,
     showSearch,
     setShowSearch,
-    cartItems,addToCart,getCartCount
+    cartItems,
+    addToCart,
+    getCartCount,
+    cartItems,
+    updateQuantity,
+    getCartAmount,
   };
   return <ShopContext.Provider value={data}>{children}</ShopContext.Provider>;
 };
