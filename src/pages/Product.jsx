@@ -6,7 +6,7 @@ import { assets } from "../assets/frontend_assets/assets";
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency } = useContext(ShopContext);
+  const { products, currency,addToCart } = useContext(ShopContext);
   const [selectedImage, setSelectedImage] = useState("");
   const [size, setSize] = useState("");
 
@@ -75,7 +75,7 @@ const Product = () => {
               ))}
             </div>
           </div>
-          <button className="bg-black text-white px-8 py-3 text-sm rounded-md hover:bg-gray-800 transition">
+          <button onClick={()=>addToCart(productData._id,size)}className="bg-black text-white px-8 py-3 text-sm rounded-md hover:bg-gray-800 transition">
             Add To Cart
           </button>
           <hr className="mt-8 sm:w-4/5" />
