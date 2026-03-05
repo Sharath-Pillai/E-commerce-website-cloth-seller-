@@ -1,5 +1,5 @@
 import React from "react";
-import { assets } from "../../src/assets/admin_assets/assets.js"; 
+import { assets } from "../../src/assets/admin_assets/assets.js";
 const NavBar = () => {
   return (
     <div className="flex items-center py-2 px-[4%] justify-between border-0 border-gray-400">
