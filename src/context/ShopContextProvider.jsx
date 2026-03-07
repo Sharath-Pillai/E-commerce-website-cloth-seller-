@@ -82,19 +82,19 @@ const ShopContextProvider = ({ children }) => {
     try {
       const response = await axios.get(backendUrl + "/api/product/list");
       // console.log(response.data);
-      if(response.data.success){
-        setProducts(response.data.products)
-      }else{
-        toast.error(response.data.message)
+      if (response.data.success) {
+        setProducts(response.data.products);
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message)
+      toast.error(error.message);
     }
   };
 
   useEffect(() => {
-    console.log(backendUrl )
+    console.log(backendUrl);
     getProductData();
   }, []);
 
