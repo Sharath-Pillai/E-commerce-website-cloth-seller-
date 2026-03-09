@@ -11,7 +11,7 @@ const ShopContextProvider = ({ children }) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
-  const [cartItems, setcartItems] = useState({});
+  const [cartItems, setCartItems] = useState({});
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
@@ -34,7 +34,7 @@ const ShopContextProvider = ({ children }) => {
       cartData[itemId] = {};
       cartData[itemId][size] = 1;
     }
-    setcartItems(cartData);
+    setCartItems(cartData);
   };
 
   const getCartCount = () => {
@@ -56,7 +56,7 @@ const ShopContextProvider = ({ children }) => {
   const updateQuantity = (itemId, size, quantity) => {
     let cartData = structuredClone(cartItems);
     cartData[itemId][size] = quantity;
-    setcartItems(cartData);
+    setCartItems(cartData);
   };
 
   const getCartAmount = () => {
@@ -112,6 +112,7 @@ const ShopContextProvider = ({ children }) => {
     showSearch,
     setShowSearch,
     cartItems,
+    setCartItems,
     addToCart,
     getCartCount,
     updateQuantity,
