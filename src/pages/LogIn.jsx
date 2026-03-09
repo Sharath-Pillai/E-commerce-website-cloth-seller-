@@ -5,7 +5,7 @@ import ShopContext from "../context/ShopContext";
 
 const LogIn = () => {
   const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
-  const [currentState, setCurrentState] = useState("Sign Up");
+  const [currentState, setCurrentState] = useState("Login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
