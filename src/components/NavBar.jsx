@@ -1,16 +1,31 @@
-import {useContext, useState} from "react";
+import { useContext, useState } from "react";
 import { assets } from "../assets/frontend_assets/assets";
 import { Link, NavLink } from "react-router-dom";
 import ShopContext from "../context/ShopContext";
 
 const NavBar = () => {
-    const[visible,setVisible] = useState(false);
-const{setShowSearch,getCartCount}=useContext(ShopContext)
- 
+  const [visible, setVisible] = useState(false);
+  const {
+    setShowSearch,
+    getCartCount,
+    navigate,
+    token,
+    setToken,
+    setCartItems,
+  } = useContext(ShopContext);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken("");
+    setCartItems({});
+    navigate("/login");
+  };
 
   return (
     <div className="flex items-center justify-between py-5  font-medium">
-      <Link to="/"><img src={assets.logo} alt="logo" className="w-36" /></Link>
+      <Link to="/">
+        <img src={assets.logo} alt="logo" className="w-36" />
+      </Link>
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
         <NavLink to="/" className="flex flex-col items-center gap-1">
           <p>Home</p>
@@ -35,24 +50,36 @@ const{setShowSearch,getCartCount}=useContext(ShopContext)
           src={assets.search_icon}
           alt="search"
           className="w-5 cursor-pointer"
-          onClick={()=>setShowSearch(true)}
+          onClick={() => setShowSearch(true)}
         />
         <div className="group relative">
-          <Link to="/login">
           <img
-          
+            onClick={() => (token ? null : navigate("/login"))}
             src={assets.profile_icon}
             alt="profile-icon"
             className="w-5 cursor-pointer"
           />
-          </Link>
-          <div className="dropdown-menu group-hover:block  hidden right-0 pt-4 absolute">
-            <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-              <p className="cursor-pointer hover:text-black">My Profile</p>
-              <p className="cursor-pointer hover:text-black">Orders</p>
-              <p className="cursor-pointer hover:text-black">Logout</p>
+
+          {/* dropbarmenu */}
+          {token && (
+            <div className="dropdown-menu group-hover:block  hidden right-0 pt-4 absolute">
+              <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
+                <p className="cursor-pointer hover:text-black">My Profile</p>
+                <p
+                  className="cursor-pointer hover:text-black"
+                  onClick={() => navigate("/orders")}
+                >
+                  Orders
+                </p>
+                <p
+                  className="cursor-pointer hover:text-black"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <Link to="/cart" className="relative">
           <img
@@ -60,21 +87,61 @@ const{setShowSearch,getCartCount}=useContext(ShopContext)
             alt="cart-icon"
             className="w-5 cursor-pointer min-w-5"
           />
-          <p className="absolute right-1.25 bottom-1.25 w-4 text-center bg-black text-white leading-4 text-[8px] rounded-full aspect-square">{getCartCount()}</p>
+          <p className="absolute right-1.25 bottom-1.25 w-4 text-center bg-black text-white leading-4 text-[8px] rounded-full aspect-square">
+            {getCartCount()}
+          </p>
         </Link>
-        <img src={assets.menu_icon} alt="menu-icon" className="w-5 cursor-pointer sm:hidden" onClick={()=>setVisible(true)} />
+        <img
+          src={assets.menu_icon}
+          alt="menu-icon"
+          className="w-5 cursor-pointer sm:hidden"
+          onClick={() => setVisible(true)}
+        />
       </div>
       {/* sidebar menu for small screens  */}
-      <div className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible? "w-full":"w-0"}`} >
+      <div
+        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible ? "w-full" : "w-0"}`}
+      >
         <div className="flex flex-col text-gray-600">
-            <div onClick ={()=>setVisible(false)} className="flex items-center gap-4 p-3 cursor-pointer ">
-                <img src={assets.dropdown_icon} alt="back" className="h-4 rotate-180" />
-                <p>Back</p>
-            </div>
-            <NavLink onClick={()=>setVisible(false)} className="py-2 pl-6 border" to="/">Home</NavLink>
-            <NavLink onClick={()=>setVisible(false)} className="py-2 pl-6 border" to="/collection">Collection</NavLink>
-            <NavLink onClick={()=>setVisible(false)} className="py-2 pl-6 border" to="/about">About</NavLink>
-            <NavLink onClick={()=>setVisible(false)} className="py-2 pl-6 border" to="/contact">Contact</NavLink>
+          <div
+            onClick={() => setVisible(false)}
+            className="flex items-center gap-4 p-3 cursor-pointer "
+          >
+            <img
+              src={assets.dropdown_icon}
+              alt="back"
+              className="h-4 rotate-180"
+            />
+            <p>Back</p>
+          </div>
+          <NavLink
+            onClick={() => setVisible(false)}
+            className="py-2 pl-6 border"
+            to="/"
+          >
+            Home
+          </NavLink>
+          <NavLink
+            onClick={() => setVisible(false)}
+            className="py-2 pl-6 border"
+            to="/collection"
+          >
+            Collection
+          </NavLink>
+          <NavLink
+            onClick={() => setVisible(false)}
+            className="py-2 pl-6 border"
+            to="/about"
+          >
+            About
+          </NavLink>
+          <NavLink
+            onClick={() => setVisible(false)}
+            className="py-2 pl-6 border"
+            to="/contact"
+          >
+            Contact
+          </NavLink>
         </div>
       </div>
     </div>
