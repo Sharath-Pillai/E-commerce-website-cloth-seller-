@@ -32,7 +32,7 @@ const Orders = ({ token }) => {
     try {
       const response= await axios.post(backendUrl+"/api/order/status",{orderId,status:event.target.value},{headers:{token}})
       if(response.data.success){
-await fetchAllOrders()
+      await fetchAllOrders()
       }
     } catch (error) {
       console.log(error)
@@ -40,7 +40,7 @@ await fetchAllOrders()
     }
   }
 
-  useEffect(()={
+  useEffect(()=>{
     fetchAllOrders()
   },[token])
   return (
