@@ -5,26 +5,29 @@ import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
 
 const Cart = () => {
-  const { products, currency, cartItems, updateQuantity,navigate } =
+  const { products, currency, cartItems, updateQuantity, navigate } =
     useContext(ShopContext);
   const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
-    const tempData = [];
-    for (const items in cartItems) {
-      for (const item in cartItems[items]) {
-        if (cartItems[items][item] > 0) {
-          tempData.push({
-            _id: items,
-            size: item,
-            quantity: cartItems[items][item],
-          });
+    if (products.length > 0) {
+      const tempData = [];
+      for (const items in cartItems) {
+        for (const item in cartItems[items]) {
+          if (cartItems[items][item] > 0) {
+            tempData.push({
+              _id: items,
+              size: item,
+              quantity: cartItems[items][item],
+            });
+          }
         }
       }
     }
+
     // console.log(tempData);
     setCartData(tempData);
-  }, [cartItems]);
+  }, [cartItems, products]);
 
   // console.log(cartData);
   return (
@@ -64,7 +67,15 @@ const Cart = () => {
                 </div>
               </div>
               <input
-              onChange={(e)=>e.target.value===""||e.target.value==="0"? null:updateQuantity(item._id,item.size,Number(e.target.value))}
+                onChange={(e) =>
+                  e.target.value === "" || e.target.value === "0"
+                    ? null
+                    : updateQuantity(
+                        item._id,
+                        item.size,
+                        Number(e.target.value),
+                      )
+                }
                 className="border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1"
                 type="number"
                 min={1}
@@ -82,9 +93,14 @@ const Cart = () => {
       </div>
       <div className="flex justify-end my-20">
         <div className="w-full sm:w-112.5">
-          <CartTotal/>
+          <CartTotal />
           <div className="w-full text-end">
-            <button onClick={()=>navigate("/place-order")} className="bg-black text-white text-sm my-8 px-8 py-3">PROCEED TO CHECKOUT</button>
+            <button
+              onClick={() => navigate("/place-order")}
+              className="bg-black text-white text-sm my-8 px-8 py-3"
+            >
+              PROCEED TO CHECKOUT
+            </button>
           </div>
         </div>
       </div>
