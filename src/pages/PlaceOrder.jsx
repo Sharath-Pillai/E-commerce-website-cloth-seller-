@@ -79,20 +79,23 @@ const PlaceOrder = () => {
             toast.error(response.data.message);
           }
           break;
+
         //API call for stripe
-        case "stripe":
-          const response = await axios.post(
-            backendUrl + "/api/order/stripe",
+        case "Stripe":
+          const responseStripe = await axios.post(
+            backendUrl + "/api/order/Stripe",
             orderData,
             { header: { token } },
           );
-          if (response.data.success) {
+          if (responseStripe.data.success) {
+            const{session_url}=responseStripe.data
+            window.location.replace(session_url)
             setCartItems({});
-            navigate("/stripe");
           } else {
-            toast.error(response.data.message);
+            toast.error(responseStripe.data.message);
           }
           break;
+
         //API call for razorpay
         case "razorpay":
           const response = await axios.post(
