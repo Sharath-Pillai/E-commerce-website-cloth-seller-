@@ -4,13 +4,13 @@ import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const { navigate, token, setCartItems, backendUrl } = useContext(ShopContext);
-const [searchParams, setSearchParams] = useSearchParams();
-
-const success = searchParams.get("success");
-const orderId = searchParams.get("orderId");
 
 const VerifyPayment = async () => {
+  const { navigate, token, setCartItems, backendUrl } = useContext(ShopContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const success = searchParams.get("success");
+  const orderId = searchParams.get("orderId");
   try {
     if (!token) {
       return null;
