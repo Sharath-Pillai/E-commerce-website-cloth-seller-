@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import ShopContext from "../context/ShopContext";
+import ShopContext from "../context/ShopContext.jsx";
 
 const LogIn = () => {
   const { token, setToken, navigate, backendUrl } = useContext(ShopContext);

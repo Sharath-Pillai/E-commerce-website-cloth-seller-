@@ -9,9 +9,9 @@ import Orders from "./pages/Orders.jsx";
 import PlaceOrder from "./pages/PlaceOrder.jsx";
 import Product from "./pages/Product.jsx";
 import NavBar from "./components/NavBar.jsx";
-import SearchBar from "./components/searchBar.jsx";
+import SearchBar from "./components/SearchBar.jsx";
 import { ToastContainer } from "react-toastify";
-import Verify from "./pages/verify.jsx";
+import Verify from "./pages/Verify.jsx";
 
 const App = () => {
   return (

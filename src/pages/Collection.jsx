@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import ShopContext from "../context/ShopContext";
+import ShopContext from "../context/ShopContext.jsx";
 import { assets } from "../assets/frontend_assets/assets";
-import Title from "../components/Title";
-import ProductItem from "../components/ProductItem";
+import Title from "../components/Title.jsx";
+import ProductItem from "../components/ProductItem.jsx";
 
 const Collection = () => {
   const { products, search, showSearch } = useContext(ShopContext);
@@ -50,12 +50,11 @@ const Collection = () => {
   };
 
   const sortProducts = (e) => {
-
     if (e.target.value === "low-high") {
-      const sortedLH=[...filterProducts].sort((a,b)=>a.price-b.price)
+      const sortedLH = [...filterProducts].sort((a, b) => a.price - b.price);
       setFilterProducts(sortedLH);
     } else if (e.target.value === "high-low") {
-      const sortedHL=[...filterProducts].sort((a,b)=>b.price-a.price)
+      const sortedHL = [...filterProducts].sort((a, b) => b.price - a.price);
       setFilterProducts(sortedHL);
     } else {
       applyFilter();
@@ -68,7 +67,6 @@ const Collection = () => {
   }, [category, subCategory, search, showSearch, products]);
 
   return (
-    
     <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 pt-10 px-4 sm:px-10 border-t ">
       {/* Filter Options */}
       <div className="min-w-60">
