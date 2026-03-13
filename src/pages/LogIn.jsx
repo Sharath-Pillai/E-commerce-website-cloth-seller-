@@ -100,7 +100,12 @@ const LogIn = () => {
           </p>
         )}
       </div>
-      <button className="border px-4 py-1 rounded bg-black text-white" type="submit">{currentState === "Login" ? "Login":"Sign Up"}</button>
+      <button
+        className="border px-4 py-1 rounded bg-black text-white"
+        type="submit"
+      >
+        {currentState === "Login" ? "Login" : "Sign Up"}
+      </button>
     </form>
   );
 };
