@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { backendUrl, currency } from "../App.jsx";
+import { backendUrl, currency } from "../constants/config";
 import { toast } from "react-toastify";
 import { assets } from "../assets/admin_assets/assets.js";
 
@@ -46,6 +46,7 @@ const Orders = ({ token }) => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAllOrders();
   }, [token]);
   return (

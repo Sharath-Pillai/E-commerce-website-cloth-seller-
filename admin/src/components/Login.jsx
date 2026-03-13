@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { backendUrl } from "../App";
+import { backendUrl } from "../constants/config";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -17,13 +17,13 @@ const Login = ({ setToken }) => {
       });
       console.log(response);
       if (response.data.success) {
-        setToken(response.data.token)
-      }else{
-        toast.error(response.data.message)
+        setToken(response.data.token);
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message)
+      toast.error(error.message);
     }
   };
   return (
