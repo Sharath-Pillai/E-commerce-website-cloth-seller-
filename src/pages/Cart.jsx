@@ -26,9 +26,9 @@ const Cart = () => {
         }
       }
       // console.log(tempData);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCartData(tempData);
     }
-
   }, [cartItems, products]);
 
   // console.log(cartData);

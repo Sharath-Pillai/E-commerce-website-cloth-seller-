@@ -136,10 +136,12 @@ const ShopContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     getProductData();
   }, []);
   useEffect(() => {
     if (!token && localStorage.getItem("token")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setToken(localStorage.getItem("token"));
       getUserCart(localStorage.getItem("token"));
     }

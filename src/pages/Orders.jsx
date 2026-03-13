@@ -32,8 +32,8 @@ const Orders = () => {
           });
         });
         console.log(allOrdersItem);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setOrderedData(allOrdersItem.reverse());
-  
       } else {
         toast.error(response.data.message);
       }
@@ -44,6 +44,7 @@ const Orders = () => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadOrderedData();
   }, [token]);
 
