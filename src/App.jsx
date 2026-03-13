@@ -10,7 +10,7 @@ import PlaceOrder from "./pages/PlaceOrder";
 import Product from "./pages/Product";
 import NavBar from "./components/NavBar.jsx";
 import SearchBar from "./components/searchBar.jsx";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import Verify from "./pages/verify.jsx";
 
 const App = () => {
