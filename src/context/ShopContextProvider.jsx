@@ -36,12 +36,16 @@ const ShopContextProvider = ({ children }) => {
     }
     setCartItems(cartData);
 
-    if(token){
+    if (token) {
       try {
-        await axios.post(backendUrl+"/api/cart/add",{itemId,size},{headers:{token}})
+        await axios.post(
+          backendUrl + "/api/cart/add",
+          { itemId, size },
+          { headers: { token } },
+        );
       } catch (error) {
-        console.log(error)
-        toast.error(error.message)
+        console.log(error);
+        toast.error(error.message);
       }
     }
   };
@@ -62,16 +66,20 @@ const ShopContextProvider = ({ children }) => {
     return totalCount;
   };
 
-  const updateQuantity = async(itemId, size, quantity) => {
+  const updateQuantity = async (itemId, size, quantity) => {
     let cartData = structuredClone(cartItems);
     cartData[itemId][size] = quantity;
     setCartItems(cartData);
-    if(token){
+    if (token) {
       try {
-        await axios.post(backendUrl+"/api/cart/update",{itemId,size,quantity},{headers:{token}})
+        await axios.post(
+          backendUrl + "/api/cart/update",
+          { itemId, size, quantity },
+          { headers: { token } },
+        );
       } catch (error) {
-        console.log(error)
-        toast.error(error.message)
+        console.log(error);
+        toast.error(error.message);
       }
     }
   };
@@ -111,22 +119,21 @@ const ShopContextProvider = ({ children }) => {
     }
   };
 
-const getUserCart=async(token)=>{
-  try {
-    const response=await axios.post(backendUrl+"/api/cart/get",{},{headers:{token}})
-    if(response.data.success){
-
-setCartItems(response.data.success)
-    }else{
-console.log(error)
-    toast.error(error.message)
+  const getUserCart = async (token) => {
+    try {
+      const response = await axios.post(
+        backendUrl + "/api/cart/get",
+        {},
+        { headers: { token } },
+      );
+      if (response.data.success) {
+        setCartItems(response.data.cartData);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
-  } catch (error) {
-    console.log(error)
-    toast.error(error.message)
-  }
-}
-
+  };
 
   useEffect(() => {
     getProductData();
@@ -134,7 +141,7 @@ console.log(error)
   useEffect(() => {
     if (!token && localStorage.getItem("token")) {
       setToken(localStorage.getItem("token"));
-      getUserCart(localStorage.getItem("token"))
+      getUserCart(localStorage.getItem("token"));
     }
   }, []);
 
