@@ -9,10 +9,12 @@ const Cart = () => {
     useContext(ShopContext);
   const [cartData, setCartData] = useState([]);
 
+  // console.log(cartItems);
   useEffect(() => {
     if (products.length > 0) {
       const tempData = [];
       for (const items in cartItems) {
+        // console.log(items);
         for (const item in cartItems[items]) {
           if (cartItems[items][item] > 0) {
             tempData.push({
@@ -23,10 +25,10 @@ const Cart = () => {
           }
         }
       }
+      // console.log(tempData);
+      setCartData(tempData);
     }
 
-    // console.log(tempData);
-    setCartData(tempData);
   }, [cartItems, products]);
 
   // console.log(cartData);
@@ -40,6 +42,7 @@ const Cart = () => {
           const productData = products.find(
             (product) => product._id === item._id,
           );
+          if (!productData) return null;
           return (
             <div
               key={index}
