@@ -17,7 +17,7 @@ const Orders = ({ token }) => {
         {},
         { headers: { token } },
       );
-      console.log(response);
+      // console.log(response);
       if (response.data.success) {
         setOrders(response.data.orders.reverse());
       } else {
