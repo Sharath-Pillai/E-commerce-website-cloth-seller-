@@ -52,7 +52,7 @@ const PlaceOrder = () => {
           const { data } = await axios.post(
             backendUrl + "/api/order/verifyRazorpay",
             response,
-            { header: { token } },
+            { headers: { token } },
           );
           if (data.success) {
             navigate("/orders");
@@ -77,7 +77,7 @@ const PlaceOrder = () => {
         for (const item in cartItems[items]) {
           if (cartItems[items][item] > 0) {
             const itemInfo = structuredClone(
-              products.find((products) => products._id === item._id),
+              products.find((products) => products._id === items),
             );
             if (itemInfo) {
               itemInfo.size = item;
@@ -88,6 +88,7 @@ const PlaceOrder = () => {
         }
       }
 
+      // console.log(orderdItems); finished only refreshing time cart goes empty pending
       const orderData = {
         items: orderdItems,
         amount: getCartAmount() + delivery_fee,
@@ -96,13 +97,13 @@ const PlaceOrder = () => {
 
       switch (method) {
         //API call for COD
-        case "COD":
+        case "cod": {
           const response = await axios.post(
             backendUrl + "/api/order/COD",
             orderData,
             { headers: { token } },
           );
-
+          // console.log(response);
           if (response.data.success) {
             setCartItems({});
             navigate("/orders");
@@ -110,39 +111,40 @@ const PlaceOrder = () => {
             toast.error(response.data.message);
           }
           break;
+        }
 
         //API call for stripe
-        case "Stripe":
+        case "stripe": {
           const responseStripe = await axios.post(
-            backendUrl + "/api/order/Stripe",
+            backendUrl + "/api/order/stripe",
             orderData,
-            { header: { token } },
+            { headers: { token } },
           );
+          console.log(responseStripe);
           if (responseStripe.data.success) {
             const { session_url } = responseStripe.data;
             window.location.replace(session_url);
-            setCartItems({});
           } else {
             toast.error(responseStripe.data.message);
           }
           break;
+        }
 
         //API call for razorpay
-        case "razorpay":
+        case "razorpay": {
           const responseRazorpay = await axios.post(
             backendUrl + "/api/order/razorpay",
             orderData,
-            { header: { token } },
+            { headers: { token } },
           );
           if (responseRazorpay.data.success) {
             console.log(responseRazorpay.data.order);
             initPay(responseRazorpay.data.order);
-            setCartItems({});
-            // navigate("/razorpay");
           } else {
             toast.error(responseRazorpay.data.message);
           }
           break;
+        }
         default:
           break;
       }
@@ -301,7 +303,6 @@ const PlaceOrder = () => {
           <div className="w-full text-end mt-8">
             <button
               type="submit"
-              onClick={() => navigate("/orders")}
               className="bg-black text-white px-16 py-3 text-sm"
             >
               Place Order
