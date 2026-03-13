@@ -15,13 +15,14 @@ const Orders = () => {
         return null;
       }
       const response = await axios.post(
-        backendUrl + "/api/order/userOrders",
+        backendUrl + "/api/order/userorders",
         {},
         { headers: { token } },
       );
+      // console.log(response)
       if (response.data.success) {
         const allOrdersItem = [];
-        response.data.map((order) => {
+        response.data.orders.map((order) => {
           order.items.map((item) => {
             item["status"] = order.status;
             item["payment"] = order.payment;
@@ -32,6 +33,7 @@ const Orders = () => {
         });
         console.log(allOrdersItem);
         setOrderedData(allOrdersItem.reverse());
+  
       } else {
         toast.error(response.data.message);
       }
@@ -47,7 +49,7 @@ const Orders = () => {
 
   return (
     <div className="border-t pt-16">
-      <div>
+      <div className="text-2xl">
         <Title text1={"My"} text2={"Orders"} />
       </div>
 
@@ -55,7 +57,7 @@ const Orders = () => {
         {orderedData.map((item, index) => (
           <div
             key={index}
-            className="py-4 border-b text-gray-700 flex flex-col md:items-center md:justify-between gap-4"
+            className="py-4 border-b border-t text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
           >
             <div className="flex items-start gap-6 text-sm">
               <img className="w-16 sm:w-20" src={item.image[0]} alt="" />
