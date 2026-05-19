@@ -12,6 +12,7 @@ const ShopContextProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
@@ -106,16 +107,17 @@ const ShopContextProvider = ({ children }) => {
 
   const getProductData = async () => {
     try {
+      console.log("Fetching products from:", backendUrl + "/api/product/list");
       const response = await axios.get(backendUrl + "/api/product/list");
-      // console.log(response.data);
+      console.log("Product response:", response.data);
       if (response.data.success) {
         setProducts(response.data.products);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.log("Error fetching products:", error);
+      toast.error("Failed to fetch products");
     }
   };
 
@@ -135,15 +137,30 @@ const ShopContextProvider = ({ children }) => {
     }
   };
 
+  const fetchUserData = async (token) => {
+    try {
+      const response = await axios.get(backendUrl + "/api/user/data", {
+        headers: { token },
+      });
+      if (response.data.success) {
+        setUserData(response.data.user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     getProductData();
   }, []);
   useEffect(() => {
     if (!token && localStorage.getItem("token")) {
+      const savedToken = localStorage.getItem("token");
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setToken(localStorage.getItem("token"));
-      getUserCart(localStorage.getItem("token"));
+      setToken(savedToken);
+      getUserCart(savedToken);
+      fetchUserData(savedToken);
     }
   }, []);
 
@@ -165,6 +182,8 @@ const ShopContextProvider = ({ children }) => {
     backendUrl,
     token,
     setToken,
+    userData,
+    setUserData,
   };
   return <ShopContext.Provider value={data}>{children}</ShopContext.Provider>;
 };
