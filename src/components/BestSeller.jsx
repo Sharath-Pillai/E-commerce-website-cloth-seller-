@@ -6,7 +6,7 @@ import ProductItem from './ProductItem.jsx'
 const BestSeller = () => {
 
 const {products}=useContext(ShopContext)
-const bestSeller=products.filter((item)=>item.bestSeller===true).slice(0,5)
+const bestSeller=products.filter((item)=>item.bestseller===true).slice(0,5)
   return (
     <div className="my-10">
       <div className="text-center py-8 text-3xl">
