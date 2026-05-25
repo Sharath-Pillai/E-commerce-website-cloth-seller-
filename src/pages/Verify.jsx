@@ -49,7 +49,9 @@ const Verify = () => {
         console.log("Verification response:", response.data);
 
         if (response.data.success) {
-          setCartItems({});
+          if (!response.data.isBuyNow) {
+            setCartItems({});
+          }
           toast.success("Payment Successful!");
           navigate("/orders");
         } else {

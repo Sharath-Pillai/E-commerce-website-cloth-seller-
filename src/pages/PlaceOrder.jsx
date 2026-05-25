@@ -1,13 +1,18 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Title from "../components/Title.jsx";
 import CartTotal from "../components/CartTotal.jsx";
 import { assets } from "../assets/frontend_assets/assets";
 import ShopContext from "../context/ShopContext.jsx";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const PlaceOrder = () => {
-  const [method, setMethod] = useState("COD");
+  const [method, setMethod] = useState("cod");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const location = useLocation();
+  const buyNowItem = location.state?.buyNowItem;
+  
   const {
     navigate,
     backendUrl,
@@ -18,6 +23,15 @@ const PlaceOrder = () => {
     delivery_fee,
     products,
   } = useContext(ShopContext);
+
+  const buyNowProduct = buyNowItem ? products.find((p) => p._id === buyNowItem._id) : null;
+  const buyNowSubTotal = buyNowProduct ? buyNowProduct.price * buyNowItem.quantity : 0;
+
+  useEffect(() => {
+    if (!buyNowItem && products.length > 0 && getCartAmount() === 0) {
+      navigate("/cart");
+    }
+  }, [cartItems, products, buyNowItem, navigate]);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -55,12 +69,14 @@ const PlaceOrder = () => {
             { headers: { token } },
           );
           if (data.success) {
+            if (!buyNowItem) {
+              setCartItems({});
+            }
             navigate("/orders");
-            setCartItems({});
           }
         } catch (error) {
           console.log(error);
-          toast.error(error);
+          toast.error(error.message || error);
         }
       },
     };
@@ -70,29 +86,51 @@ const PlaceOrder = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    setIsSubmitting(true);
     try {
       const orderdItems = [];
 
-      for (const items in cartItems) {
-        for (const item in cartItems[items]) {
-          if (cartItems[items][item] > 0) {
-            const itemInfo = structuredClone(
-              products.find((products) => products._id === items),
-            );
-            if (itemInfo) {
-              itemInfo.size = item;
-              itemInfo.quantity = cartItems[items][item];
-              orderdItems.push(itemInfo);
+      if (buyNowItem) {
+        const itemInfo = structuredClone(
+          products.find((p) => p._id === buyNowItem._id),
+        );
+        if (itemInfo) {
+          itemInfo.size = buyNowItem.size;
+          itemInfo.quantity = buyNowItem.quantity;
+          orderdItems.push(itemInfo);
+        }
+      } else {
+        for (const items in cartItems) {
+          for (const item in cartItems[items]) {
+            if (cartItems[items][item] > 0) {
+              const itemInfo = structuredClone(
+                products.find((products) => products._id === items),
+              );
+              if (itemInfo) {
+                itemInfo.size = item;
+                itemInfo.quantity = cartItems[items][item];
+                orderdItems.push(itemInfo);
+              }
             }
           }
         }
       }
 
-      // console.log(orderdItems); finished only refreshing time cart goes empty pending
+      if (orderdItems.length === 0) {
+        toast.error("Your cart is empty. Add items before placing an order.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const orderAmount = buyNowItem
+        ? buyNowSubTotal + delivery_fee
+        : getCartAmount() + delivery_fee;
+
       const orderData = {
         items: orderdItems,
-        amount: getCartAmount() + delivery_fee,
+        amount: orderAmount,
         address: formData,
+        isBuyNow: !!buyNowItem,
       };
 
       switch (method) {
@@ -105,10 +143,13 @@ const PlaceOrder = () => {
           );
           // console.log(response);
           if (response.data.success) {
-            setCartItems({});
+            if (!buyNowItem) {
+              setCartItems({});
+            }
             navigate("/orders");
           } else {
             toast.error(response.data.message);
+            setIsSubmitting(false);
           }
           break;
         }
@@ -151,6 +192,7 @@ const PlaceOrder = () => {
     } catch (error) {
       console.log(error);
       toast.error(error.message);
+      setIsSubmitting(false);
     }
   };
 
@@ -256,7 +298,7 @@ const PlaceOrder = () => {
       {/* Right-side  */}
       <div className="mt-8">
         <div className="mt-8 min-w-80">
-          <CartTotal />
+          <CartTotal subTotal={buyNowItem ? buyNowSubTotal : undefined} />
         </div>
         <div className="mt-12">
           <Title text1={"Payment"} text2={"Method"} />

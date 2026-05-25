@@ -1,12 +1,15 @@
-import { useContext } from 'react'
-import ShopContext from '../context/ShopContext.jsx'
-import Title from './Title.jsx'
-import ProductItem from './ProductItem.jsx'
+import { useContext } from "react";
+import ShopContext from "../context/ShopContext.jsx";
+import Title from "./Title.jsx";
+import ProductItem from "./ProductItem.jsx";
 
 const BestSeller = () => {
-
-const {products}=useContext(ShopContext)
-const bestSeller=products.filter((item)=>item.bestseller===true).slice(0,5)
+  const { products } = useContext(ShopContext);
+  console.log(products);
+  const bestSeller = products
+    .filter((item) => item.bestseller === true)
+    .slice(0, 5);
+  console.log(bestSeller);
   return (
     <div className="my-10">
       <div className="text-center py-8 text-3xl">
@@ -18,13 +21,19 @@ const bestSeller=products.filter((item)=>item.bestseller===true).slice(0,5)
           aperiam, amet veritatis minus, voluptas ratione incidunt iure a!
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6">
-          {bestSeller.map((item,index) => (
-            <ProductItem key={index} id={item._id} image={item.image} name={item.name} price={item.price}/>
+          {bestSeller.map((item, index) => (
+            <ProductItem
+              key={index}
+              id={item._id}
+              image={item.image}
+              name={item.name}
+              price={item.price}
+            />
           ))}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BestSeller
+export default BestSeller;

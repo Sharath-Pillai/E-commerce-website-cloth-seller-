@@ -3,14 +3,36 @@ import ShopContext from "../context/ShopContext.jsx";
 import { useParams } from "react-router-dom";
 import RelatedProducts from "../components/RelatedProducts.jsx";
 import { assets } from "../assets/frontend_assets/assets";
+import { toast } from "react-toastify";
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency,addToCart } = useContext(ShopContext);
+  const { products, currency, addToCart, toggleWishlist, wishlist, navigate, token } = useContext(ShopContext);
   const [selectedImage, setSelectedImage] = useState("");
   const [size, setSize] = useState("");
 
   const productData = products.find((item) => item._id === productId);
+
+  const handleBuyNow = () => {
+    if (!token) {
+      toast.error("Please sign in to purchase");
+      navigate("/login");
+      return;
+    }
+    if (!size) {
+      toast.error("Please select size");
+      return;
+    }
+    navigate("/place-order", {
+      state: {
+        buyNowItem: {
+          _id: productData._id,
+          size: size,
+          quantity: 1,
+        }
+      }
+    });
+  };
 
   if (!productData) {
     return <div className="opacity-50 pt-10 text-center">Not Found.....</div>;
@@ -75,9 +97,34 @@ const Product = () => {
               ))}
             </div>
           </div>
-          <button onClick={()=>addToCart(productData._id,size)}className="bg-black text-white px-8 py-3 text-sm rounded-md hover:bg-gray-800 transition">
-            Add To Cart
-          </button>
+          <div className="flex gap-4 items-center">
+            <button onClick={()=>addToCart(productData._id,size)} className="bg-black text-white px-8 py-3 text-sm rounded-md hover:bg-gray-800 transition">
+              Add To Cart
+            </button>
+            <button onClick={handleBuyNow} className="bg-orange-600 text-white px-8 py-3 text-sm rounded-md hover:bg-orange-700 transition">
+              Buy Now
+            </button>
+            <button
+              onClick={() => toggleWishlist(productData._id)}
+              className="p-3 border rounded-md hover:bg-gray-50 transition"
+              title={wishlist.includes(productData._id) ? "Remove from Wishlist" : "Add to Wishlist"}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill={wishlist.includes(productData._id) ? "red" : "none"}
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke={wishlist.includes(productData._id) ? "red" : "currentColor"}
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                />
+              </svg>
+            </button>
+          </div>
           <hr className="mt-8 sm:w-4/5" />
           <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
             <p>100% Original Product</p>
@@ -93,14 +140,7 @@ const Product = () => {
           <p className="border px-5 py-3 text-sm">Review</p>
         </div>
         <div className="flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500">
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aut, sunt?
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit
-            quae quia odio totam molestias aperiam maxime eveniet asperiores hic
-            assumenda?
-          </p>
+          <p>{productData.description}</p>
         </div>
       </div>
       {/* display related products */}
