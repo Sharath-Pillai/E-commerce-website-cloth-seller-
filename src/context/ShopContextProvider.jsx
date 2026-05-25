@@ -17,8 +17,14 @@ const ShopContextProvider = ({ children }) => {
 
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState("");
+  const [wishlist, setWishlist] = useState([]);
 
   const addToCart = async (itemId, size) => {
+    if (!token) {
+      toast.error("Please sign in to add items to your cart");
+      navigate("/login");
+      return;
+    }
     if (!size) {
       toast.error("Please select size");
       return;
@@ -144,25 +150,66 @@ const ShopContextProvider = ({ children }) => {
       });
       if (response.data.success) {
         setUserData(response.data.user);
+        setWishlist(response.data.user.wishlistData || []);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const toggleWishlist = async (itemId) => {
+    if (!token) {
+      toast.error("Please sign in to manage your wishlist");
+      navigate("/login");
+      return;
+    }
+    let updatedWishlist = [...wishlist];
+    const isAdded = updatedWishlist.includes(itemId);
+    
+    if (isAdded) {
+      updatedWishlist = updatedWishlist.filter(id => id !== itemId);
+      toast.success("Item removed from wishlist");
+    } else {
+      updatedWishlist.push(itemId);
+      toast.success("Item added to wishlist");
+    }
+    
+    setWishlist(updatedWishlist);
+    
+    try {
+      const endpoint = isAdded ? "/api/user/wishlist/remove" : "/api/user/wishlist/add";
+      await axios.post(
+        backendUrl + endpoint,
+        { itemId },
+        { headers: { token } }
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     getProductData();
   }, []);
+
   useEffect(() => {
-    if (!token && localStorage.getItem("token")) {
-      const savedToken = localStorage.getItem("token");
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+    const savedToken = localStorage.getItem("token");
+    if (savedToken) {
       setToken(savedToken);
-      getUserCart(savedToken);
-      fetchUserData(savedToken);
     }
   }, []);
+
+  useEffect(() => {
+    if (token) {
+      getUserCart(token);
+      fetchUserData(token);
+    } else {
+      setCartItems({});
+      setUserData(null);
+      setWishlist([]);
+    }
+  }, [token]);
 
   const data = {
     products,
@@ -184,6 +231,9 @@ const ShopContextProvider = ({ children }) => {
     setToken,
     userData,
     setUserData,
+    wishlist,
+    toggleWishlist,
+    setWishlist,
   };
   return <ShopContext.Provider value={data}>{children}</ShopContext.Provider>;
 };
