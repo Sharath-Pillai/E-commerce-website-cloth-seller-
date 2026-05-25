@@ -7,6 +7,8 @@ const AdminLogin = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const userURL = import.meta.env.VITE_FRONTEND_URL;
+
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
@@ -70,8 +72,8 @@ const AdminLogin = ({ setToken }) => {
           </button>
         </form>
         <div className="mt-8 text-sm text-center">
-          <a 
-            href="http://localhost:5174/login" 
+          <a
+            href={userURL + "/login"}
             className="text-gray-500 hover:text-black underline"
           >
             Go to User Sign-in
