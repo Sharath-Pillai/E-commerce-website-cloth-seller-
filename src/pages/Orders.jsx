@@ -10,7 +10,13 @@ const Orders = () => {
   const [orderedData, setOrderedData] = useState([]);
   const [visibleTracker, setVisibleTracker] = useState(null);
 
-  const steps = ["Order Placed", "Packing", "Shipped", "Out for delivery", "Delivered"];
+  const steps = [
+    "Order Placed",
+    "Packing",
+    "Shipped",
+    "Out for delivery",
+    "Delivered",
+  ];
 
   const getStepIndex = (status) => {
     const cleanedStatus = (status || "").trim().toLowerCase();
@@ -55,7 +61,7 @@ const Orders = () => {
           });
         });
         console.log(allOrdersItem);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+
         setOrderedData(allOrdersItem.reverse());
       } else {
         toast.error(response.data.message);
@@ -67,7 +73,6 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadOrderedData();
   }, [token]);
 
@@ -124,53 +129,77 @@ const Orders = () => {
 
             {visibleTracker === index && (
               <div className="mt-4 p-6 bg-gray-50 rounded-lg border border-gray-100 transition-all duration-300 w-full">
-                <p className="text-sm font-semibold text-gray-800 mb-6">Order Status Timeline</p>
-                
+                <p className="text-sm font-semibold text-gray-800 mb-6">
+                  Order Status Timeline
+                </p>
+
                 <div className="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-2 relative">
                   {steps.map((step, sIdx) => {
                     const currentStep = getStepIndex(item.status);
                     const isCompleted = sIdx <= currentStep;
                     const isCurrent = sIdx === currentStep;
-                    
+
                     return (
-                      <div key={sIdx} className="flex flex-1 flex-row md:flex-col items-center md:items-center relative w-full md:w-auto">
+                      <div
+                        key={sIdx}
+                        className="flex flex-1 flex-row md:flex-col items-center md:items-center relative w-full md:w-auto"
+                      >
                         {/* Horizontal Connector Line for Desktop */}
                         {sIdx < steps.length - 1 && (
-                          <div 
-                            className={`hidden md:block absolute top-[15px] left-[50%] right-[-50%] h-[3px] z-0 ${
-                              sIdx < currentStep ? "bg-green-500" : "bg-gray-200"
+                          <div
+                            className={`hidden md:block absolute top-3.75 left-[50%] right-[-50%] h-0.75 z-0 ${
+                              sIdx < currentStep
+                                ? "bg-green-500"
+                                : "bg-gray-200"
                             }`}
                           />
                         )}
                         {/* Vertical Connector Line for Mobile */}
                         {sIdx < steps.length - 1 && (
-                          <div 
-                            className={`md:hidden absolute left-[15px] top-[32px] bottom-[-32px] w-[3px] z-0 ${
-                              sIdx < currentStep ? "bg-green-500" : "bg-gray-200"
+                          <div
+                            className={`md:hidden absolute left-3.75 top-8 bottom-8 w-0.75 z-0 ${
+                              sIdx < currentStep
+                                ? "bg-green-500"
+                                : "bg-gray-200"
                             }`}
                           />
                         )}
-                        
+
                         {/* Step circle */}
-                        <div 
+                        <div
                           className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-full border-2 transition-all duration-300 ${
-                            isCompleted 
-                              ? "bg-green-500 border-green-500 text-white" 
+                            isCompleted
+                              ? "bg-green-500 border-green-500 text-white"
                               : "bg-white border-gray-300 text-gray-400"
                           } ${isCurrent ? "ring-4 ring-green-100 scale-110" : ""}`}
                         >
                           {isCompleted ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={3}
+                              stroke="currentColor"
+                              className="w-4 h-4"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M4.5 12.75l6 6 9-13.5"
+                              />
                             </svg>
                           ) : (
-                            <span className="text-xs font-semibold">{sIdx + 1}</span>
+                            <span className="text-xs font-semibold">
+                              {sIdx + 1}
+                            </span>
                           )}
                         </div>
-                        
+
                         {/* Step Label */}
                         <div className="ml-4 md:ml-0 md:mt-2 text-left md:text-center flex flex-col items-start md:items-center">
-                          <span className={`text-xs font-semibold ${isCompleted ? "text-green-600" : "text-gray-500"}`}>
+                          <span
+                            className={`text-xs font-semibold ${isCompleted ? "text-green-600" : "text-gray-500"}`}
+                          >
                             {step}
                           </span>
                           {isCurrent && (
