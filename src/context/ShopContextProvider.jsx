@@ -9,6 +9,7 @@ const ShopContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  console.log("Backend URL:", backendUrl);
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
@@ -165,23 +166,25 @@ const ShopContextProvider = ({ children }) => {
     }
     let updatedWishlist = [...wishlist];
     const isAdded = updatedWishlist.includes(itemId);
-    
+
     if (isAdded) {
-      updatedWishlist = updatedWishlist.filter(id => id !== itemId);
+      updatedWishlist = updatedWishlist.filter((id) => id !== itemId);
       toast.success("Item removed from wishlist");
     } else {
       updatedWishlist.push(itemId);
       toast.success("Item added to wishlist");
     }
-    
+
     setWishlist(updatedWishlist);
-    
+
     try {
-      const endpoint = isAdded ? "/api/user/wishlist/remove" : "/api/user/wishlist/add";
+      const endpoint = isAdded
+        ? "/api/user/wishlist/remove"
+        : "/api/user/wishlist/add";
       await axios.post(
         backendUrl + endpoint,
         { itemId },
-        { headers: { token } }
+        { headers: { token } },
       );
     } catch (error) {
       console.log(error);
