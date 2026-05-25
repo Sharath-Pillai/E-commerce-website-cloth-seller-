@@ -13,6 +13,10 @@ import SearchBar from "./components/SearchBar.jsx";
 import { ToastContainer } from "react-toastify";
 import Verify from "./pages/Verify.jsx";
 import Chatbot from "./components/Chatbot.jsx";
+import Footer from "./components/Footer.jsx";
+import Wishlist from "./pages/Wishlist.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import Profile from "./pages/Profile.jsx";
 
 
 const App = () => {
@@ -32,10 +36,12 @@ const App = () => {
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/product/:productId" element={<Product />} />
         <Route path="/verify" element={<Verify />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
-    <div>
       <Chatbot />
-    </div>
+      <Footer />
     </div>
 
   );
