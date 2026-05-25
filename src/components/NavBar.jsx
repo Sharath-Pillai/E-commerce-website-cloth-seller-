@@ -14,14 +14,23 @@ const NavBar = () => {
     token,
     setToken,
     setCartItems,
+    wishlist,
+    userData,
+    setWishlist,
   } = useContext(ShopContext);
 
   const handleLogout = () => {
+    localStorage.removeItem("wishlist"); // clear any stale localStorage wishlist data just in case
     localStorage.removeItem("token");
     setToken("");
     setCartItems({});
+    setWishlist([]); // clear wishlist state
     navigate("/login");
   };
+
+  if (location.pathname === "/login") {
+    return null;
+  }
 
   return (
     <div className="flex items-center justify-between py-5  font-medium">
@@ -59,9 +68,14 @@ const NavBar = () => {
           ""
         )}
 
-        <div className="group relative">
+        <div className="group relative flex items-center gap-2">
+          {token && userData && (
+            <span className="hidden sm:block text-sm text-gray-700 font-medium">
+              {userData.name.split(" ")[0]}
+            </span>
+          )}
           <img
-            onClick={() => (token ? null : navigate("/login"))}
+            onClick={() => (token ? navigate("/profile") : navigate("/login"))}
             src={assets.profile_icon}
             alt="profile-icon"
             className="w-5 cursor-pointer"
@@ -69,9 +83,14 @@ const NavBar = () => {
 
           {/* dropbarmenu */}
           {token && (
-            <div className="dropdown-menu group-hover:block  hidden right-0 pt-4 absolute">
-              <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-                <p className="cursor-pointer hover:text-black">My Profile</p>
+            <div className="dropdown-menu group-hover:block  hidden right-0 pt-4 absolute top-5 z-50">
+              <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded shadow-lg">
+                <p
+                  className="cursor-pointer hover:text-black"
+                  onClick={() => navigate("/profile")}
+                >
+                  My Profile
+                </p>
                 <p
                   className="cursor-pointer hover:text-black"
                   onClick={() => navigate("/orders")}
@@ -88,6 +107,27 @@ const NavBar = () => {
             </div>
           )}
         </div>
+        <Link to="/wishlist" className="relative mr-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill={wishlist.length > 0 ? "red" : "none"}
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke={wishlist.length > 0 ? "red" : "currentColor"}
+            className="w-5 h-5 text-gray-700 hover:text-red-500 transition-colors cursor-pointer"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+            />
+          </svg>
+          {wishlist.length > 0 && (
+            <p className="absolute -right-1 -bottom-1 w-3.5 h-3.5 flex items-center justify-center bg-red-500 text-white text-[7px] rounded-full">
+              {wishlist.length}
+            </p>
+          )}
+        </Link>
         <Link to="/cart" className="relative">
           <img
             src={assets.cart_icon}

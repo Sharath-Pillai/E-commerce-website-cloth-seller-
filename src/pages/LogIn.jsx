@@ -46,7 +46,7 @@ const LogIn = () => {
     if (token) {
       navigate("/");
     }
-  }, [token]);
+  }, [token, navigate]);
   return (
     <form
       onSubmit={onSubmitHandler}
@@ -74,6 +74,7 @@ const LogIn = () => {
         type="email"
         className="w-full px-3 py-2 border border-gray-800"
         placeholder="Email"
+        required
       />
       <input
         value={password}
@@ -81,6 +82,7 @@ const LogIn = () => {
         type="password"
         className="w-full px-3 py-2 border border-gray-800"
         placeholder="Password"
+        required
       />
       <div className="w-full flex justify-between text-sm -mt-2">
         <p className="cursor-pointer">Forgot Your password?</p>
@@ -101,11 +103,20 @@ const LogIn = () => {
         )}
       </div>
       <button
-        className="border px-4 py-1 rounded bg-black text-white"
+        className="border px-4 py-1 rounded bg-black text-white w-full sm:w-auto"
         type="submit"
       >
         {currentState === "Login" ? "Login" : "Sign Up"}
       </button>
+
+      <div className="mt-6 text-sm text-center">
+        <a 
+          href="http://localhost:5173/login" 
+          className="text-gray-500 hover:text-black underline"
+        >
+          Admin Sign-in
+        </a>
+      </div>
     </form>
   );
 };
