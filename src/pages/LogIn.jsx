@@ -9,6 +9,9 @@ const LogIn = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const adminURL = import.meta.env.VITE_ADMIN_URL;
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -110,8 +113,8 @@ const LogIn = () => {
       </button>
 
       <div className="mt-6 text-sm text-center">
-        <a 
-          href="http://localhost:5173/login" 
+        <a
+          href={adminURL + "/login"}
           className="text-gray-500 hover:text-black underline"
         >
           Admin Sign-in
